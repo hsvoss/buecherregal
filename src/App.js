@@ -40,10 +40,8 @@ class BooksApp extends React.Component {
                     <>
                         <Header/>
                         <div className="list-books-content">
-                            {/*{booksByShelf.map(books => <Bookshelf books={books}/>)}*/}
                             {Object.entries(this.groupBy(this.state.books, 'shelf'))
                                 .map((value) => <Bookshelf key={value[0]} shelfKey={value[0]} books={value[1]}/> )}
-
                         </div>
                         <Link to='/search' className='open-search'>Add a book</Link>
                     </>

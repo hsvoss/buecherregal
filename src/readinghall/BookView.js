@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 
 const BookView = props => (
     <div className="book">
-        {console.log(props.book)}
         <div className="book-top">
             <div className="book-cover" style={{
                 width: 128,
