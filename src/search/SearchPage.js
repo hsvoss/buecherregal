@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {Link} from "react-router-dom";
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import * as BooksAPI from "../BooksAPI";
 import BookView from "../readinghall/BookView";
 
@@ -18,20 +18,27 @@ class SearchPage extends Component {
         query: '',
     };
 
-    // componentDidMount() {}
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.state.query !== prevState.query) {
-            BooksAPI.search(this.state.query).then(value => (
-                // console.log("Return-value of search", value)
-                this.setState({
-                    // searchedBooks: Array.isArray(value) ? value : [],
-                    searchedBooks: value,
-                })
-            ));
+    componentDidUpdate(prevProps, prevState, snapshot) {  //TODO: find a better way to catch all 3 Failure-Cases
+        if (this.state.query === '' && this.state.query !== prevState.query) {
+            this.setState({
+                searchedBooks: [],
+            })
+        } else if (this.state.query !== prevState.query) {
+            BooksAPI.search(this.state.query).then(response => {
+                if (!response.error) {
+                    this.setState({
+                        searchedBooks: response,
+                    })
+                } else {
+                    this.setState({
+                        searchedBooks: [],
+                    })
+                }
+
+            }).catch(e => console.warn(e))
         }
     }
-
 
     render() {
         return (
@@ -39,18 +46,16 @@ class SearchPage extends Component {
                 <div className="search-books-bar">
                     <Link to='/' className='close-search'>Close</Link>
                     <div className="search-books-input-wrapper">
-                        <input onChange={event => {
-                            this.setState({query: event.target.value.trim()})
-                        }} type="text"
-                               placeholder="Search by title or author"/>
+                        <input onChange={event => this.setState({ query: event.target.value.trim() })}
+                            type="text"
+                            placeholder="Search by title or author" />
                     </div>
                 </div>
                 <div className="search-books-results">
                     <ol className="books-grid">
-                        {console.log("Books to be rendered", this.state.searchedBooks)}
                         {this.state.searchedBooks.map(book =>
                             <li key={book.id}>
-                                <BookView book={book}/>
+                                <BookView book={book} />
                             </li>)}
                     </ol>
                 </div>
