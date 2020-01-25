@@ -1,3 +1,9 @@
+## Bücherregal
+
+This project is a quick demo of basic React concepts, including State Management, Lifecycle Events and the React Router.
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
