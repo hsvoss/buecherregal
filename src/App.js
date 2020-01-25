@@ -3,11 +3,11 @@ import * as BooksAPI from './BooksAPI'
 import './App.css'
 import SearchPage from "./search/SearchPage";
 import Header from "./readinghall/Header";
-import { Link, Route } from "react-router-dom";
+import {Link, Route} from "react-router-dom";
 import Bookshelf from "./readinghall/Bookshelf";
 
 
-const prettyShelfNames = {};
+export const prettyShelfNames = {};
 prettyShelfNames.currentlyReading = "Currently Reading";
 prettyShelfNames.wantToRead = "Want to Read";
 prettyShelfNames.read = "Already Read";
@@ -19,7 +19,6 @@ class BooksApp extends React.Component {
     };
 
 
-
     componentDidMount() {
         BooksAPI.getAll().then(response => this.setState({
             books: response,
@@ -29,27 +28,38 @@ class BooksApp extends React.Component {
     moveToShelf = (shelfKey, book) => {
         console.log("shelfKey", shelfKey)
         console.log("book", book)
-    }
+        BooksAPI.update(book, shelfKey).then(response => console.log("response", response))
+
+        this.setState(currentState => {
+            book.shelf = shelfKey
+            return ({
+                    books: currentState.books.filter(book => book.shelf !== 'none'),
+                }
+            )
+        })
+
+    };
 
     render() {
         return (
             <div className="app">
                 <Route exact path='/' render={() =>
                     <>
-                        <Header />
+                        <Header/>
                         <div className="list-books-content">
                             {Object.keys(prettyShelfNames)
                                 .map(shelfKey => ({
                                     shelfKey: shelfKey,
                                     books: this.state.books.filter(books => books.shelf === shelfKey)
                                 }))
-                                .map(booksWrapper => booksWrapper.books.length &&
-                                    <Bookshelf key={booksWrapper.shelfKey} shelfKey={booksWrapper.shelfKey} books={booksWrapper.books} moveToShelf={this.moveToShelf} />)}
+                                .map(booksWrapper => booksWrapper.books.length > 0 &&
+                                    <Bookshelf key={booksWrapper.shelfKey} shelfKey={booksWrapper.shelfKey}
+                                               books={booksWrapper.books} moveToShelf={this.moveToShelf}/>)}
                         </div>
                         <Link to='/search' className='open-search'>Add a book</Link>
                     </>
-                } />
-                <Route path='/search' render={() => <SearchPage moveToShelf={this.moveToShelf} />} />
+                }/>
+                <Route path='/search' render={() => <SearchPage currentLibrary={this.state.books} moveToShelf={this.moveToShelf}/>}/>
             </div>
         )
     }
