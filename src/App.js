@@ -1,7 +1,7 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
-import SearchPage from "./SearchPage";
+import SearchPage from "./search/SearchPage";
 import Header from "./readinghall/Header";
 import {Link, Route} from "react-router-dom";
 import Bookshelf from "./readinghall/Bookshelf";
