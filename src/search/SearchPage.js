@@ -5,14 +5,17 @@ import Book from "../readinghall/Book";
 import PropTypes from "prop-types";
 
 
-const mergeSerchedBooksWithShelves = (response, currentLibrary) => {
-    // omg js is lacking so much of collections
-    // currentLibrary.map(myBook => response.filter)
-    // response.filter(theirBook => theirBook.id);
+const mergeSearchedBooksWithShelves = (theirBooks, myBooks) => {
 
-    // burn js - burn it with fire!!
-    response.map(theirBook => {
-        currentLibrary.map(myBook => {
+    // BinaryOperator<Book> takeTheirBookWithMyShelf = (myBook, theirBook) -> {
+    //     theirBook.shelf = myBook.shelf;
+    //     return theirBook;
+    // };
+    // Map<String, Book> serverMap1 = Stream.concat(myBooks.stream(), theirBooks.stream())
+    //     .collect(Collectors.toMap(Book::getId, Function.identity(), takeTheirBookWithMyShelf));
+
+    theirBooks.map(theirBook => {
+        myBooks.map(myBook => {
             if (theirBook.id === myBook.id) {
                 theirBook.shelf = myBook.shelf
             }
@@ -21,7 +24,7 @@ const mergeSerchedBooksWithShelves = (response, currentLibrary) => {
         return theirBook;
     });
 
-    return response;
+    return theirBooks;
 };
 
 
@@ -41,14 +44,13 @@ class SearchPage extends Component {
             BooksAPI.search(this.state.query).then(response => {
                 if (!response.error) {
                     this.setState({
-                        searchedBooks: mergeSerchedBooksWithShelves(response, this.props.currentLibrary),
+                        searchedBooks: mergeSearchedBooksWithShelves(response, this.props.currentLibrary),
                     })
                 } else {
                     this.setState({
                         searchedBooks: [],
                     })
                 }
-
             }).catch(e => console.warn(e))
         }
     }

@@ -3,7 +3,7 @@ import * as BooksAPI from './BooksAPI'
 import './App.css'
 import SearchPage from "./search/SearchPage";
 import Header from "./readinghall/Header";
-import {Link, Route} from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 import Bookshelf from "./readinghall/Bookshelf";
 
 
@@ -26,15 +26,16 @@ class BooksApp extends React.Component {
     }
 
     moveToShelf = (shelfKey, book) => {
-        console.log("shelfKey", shelfKey)
-        console.log("book", book)
-        BooksAPI.update(book, shelfKey).then(response => console.log("response", response))
+        BooksAPI.update(book, shelfKey).then(/* nothing to do*/);
 
         this.setState(currentState => {
             book.shelf = shelfKey
             return ({
-                    books: currentState.books.filter(book => book.shelf !== 'none'),
-                }
+                books: currentState.books
+                    .filter(otherBook => otherBook.id !== book.id)
+                    .concat(book)
+                    .filter(b => b.shelf !== 'none')
+            }
             )
         })
 
@@ -45,7 +46,7 @@ class BooksApp extends React.Component {
             <div className="app">
                 <Route exact path='/' render={() =>
                     <>
-                        <Header/>
+                        <Header />
                         <div className="list-books-content">
                             {Object.keys(prettyShelfNames)
                                 .map(shelfKey => ({
@@ -54,12 +55,17 @@ class BooksApp extends React.Component {
                                 }))
                                 .map(booksWrapper => booksWrapper.books.length > 0 &&
                                     <Bookshelf key={booksWrapper.shelfKey} shelfKey={booksWrapper.shelfKey}
-                                               books={booksWrapper.books} moveToShelf={this.moveToShelf}/>)}
+                                        books={booksWrapper.books} moveToShelf={this.moveToShelf} />)}
                         </div>
                         <Link to='/search' className='open-search'>Add a book</Link>
                     </>
-                }/>
-                <Route path='/search' render={() => <SearchPage currentLibrary={this.state.books} moveToShelf={this.moveToShelf}/>}/>
+                } />
+                <Route path='/search' render={({ history }) => <SearchPage
+                    currentLibrary={this.state.books}
+                    moveToShelf={(shelfKey, book) => {
+                        this.moveToShelf(shelfKey, book);
+                        // history.push('/') // uncomment do navigate automatically back
+                    }} />} />
             </div>
         )
     }

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const BookshelfChanger = ({moveToShelf, currentShelf}) =>
+const BookshelfChanger = ({ moveToShelf, currentShelf }) =>
     <div className="book-shelf-changer" sel={currentShelf}>
         <select onChange={moveToShelf} defaultValue={currentShelf}>
             <option value="move" disabled>Move to...</option>
