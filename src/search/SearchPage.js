@@ -2,15 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import * as BooksAPI from "../BooksAPI";
 import BookView from "../readinghall/BookView";
-
-{/*               NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */
-}
+import PropTypes from "prop-types";
 
 class SearchPage extends Component {
     state = {
@@ -55,7 +47,7 @@ class SearchPage extends Component {
                     <ol className="books-grid">
                         {this.state.searchedBooks.map(book =>
                             <li key={book.id}>
-                                <BookView book={book} />
+                                <BookView book={book}  moveToShelf={this.props.moveToShelf}/>
                             </li>)}
                     </ol>
                 </div>
@@ -63,6 +55,10 @@ class SearchPage extends Component {
         );
     }
 
+}
+
+SearchPage.propTypes = {
+    moveToShelf: PropTypes.func.isRequired
 }
 
 export default SearchPage;
