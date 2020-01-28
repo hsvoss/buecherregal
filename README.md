@@ -4,6 +4,8 @@ This project is a quick demo of basic React concepts, including State Management
 It is a small application to track your books in three virtual bookshelves. You can store them in the shelves "Currently Reading", "Wanting to Read" and "Read".
 To add your books to your virtual shelves you can search and store them.
 
+[Click here](https://upbeat-jones-6fb07f.netlify.com) to see the app running.
+
 
 ## Install
 
